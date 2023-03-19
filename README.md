@@ -1,102 +1,144 @@
-# Сервис API для взаимодействия с проектом Yatube
-____
-## Yatube - социальная сеть для блогеров
+# API для Yatube
+## Описание
+В проекте реализован REST API для Yatube, который позволяет получать 
+информацию о постах, комментариях, группах и авторах, а так же 
+создавать и редактировать свои записи и комментарии, подписываться
+на новых авторов, и просматривать список подписок.
 
-Полностью реализует доступ к функционалу социальной сети [Yatube](https://github.com/StrekozJulia/hw05_final.git) через API
-____
+# Установка
+## Как запустить проект:
 
-## Технологии:
-* Python 3.7
-* Django 2.2.16
-* Pillow 8.3.1
-* Pytest 6.2.4
-* Django 2.2.16
-* DjangoRestFramework 3.12.4
-* PyJWT==2.1.0
-* Djoser==2.1.0
+Клонировать репозиторий и перейти в него в командной строке:
 
-### Как запустить проект:
-
-1. Клонировать репозиторий, выполнив следующую команду в консоли:
 ```
-git clone https://github.com/StrekozJulia/api_final_yatube.git
+git clone https://github.com/AlexeyTikhonchuk/api_final_yatube.git
 ```
-2. Перейти в него в командной строке
+
 ```
 cd api_final_yatube
 ```
-3. Cоздать виртуальное окружение
+
+Cоздать и активировать виртуальное окружение:
+
 ```
-py -3.7 -m venv venv
+python -m venv env
 ```
-4. Активировать виртуальное окружение
+
 ```
-source venv/bin/activate
+source env/bin/activate
 ```
-5. Обновить пакетный установщик
+
 ```
-py -3.7 -m pip install --upgrade pip
+python -m pip install --upgrade pip
 ```
-6. Установить зависимости из файла requirements.txt
+
+Установить зависимости из файла requirements.txt:
+
 ```
 pip install -r requirements.txt
 ```
-7. Выполнить миграции
+
+Выполнить миграции:
+
 ```
 python manage.py migrate
 ```
-8. Запустить проект
+
+Запустить проект:
+
 ```
 python manage.py runserver
 ```
-____
-## Доступные запросы к API:
 
-+ http://127.0.0.1.8000/api/v1/users/ - создание нового пользователя
-    Тип запроса: POST
-    Передаваемые данные: {"username": string, "password": string}
+## Примеры запросов
+### Получение списка публикаций
+Для получения списка всех публикаций необходимо отправить 
+Get-запрос на адрес `http://127.0.0.1:8000/api/v1/posts/`.
+При помощи параметров `limit` и `offset` можно настроить размер
+и область выдачи
 
-+ http://127.0.0.1.8000/api/v1/jwt/create/ - создание токена
-    Тип запроса: POST
-    Передаваемые данные: {"username": string, "password": string}
+Пример ответа:
+```
+[
+    {
+        "id": 1,
+        "author": "AlexTheSecond",
+        "text": "SomeText",
+        "pub_date": "2022-08-07T21:36:52.908182Z",
+        "image": null,
+        "group": null
+    },
+    {
+        "id": 2,
+        "author": "AlexTheSecond",
+        "text": "SomeNewText",
+        "pub_date": "2022-08-07T21:37:05.442929Z",
+        "image": null,
+        "group": null
+    }
+]
+```
 
-+ http://127.0.0.1.8000/api/v1/jwt/refresh/ - получение токена
-    Тип запроса: POST
-    Передаваемые данные: {"refresh": string}
+### Добавление публикации
+Для добавления новой публикации необходимо отправить POST-запрос
+на адрес `http://127.0.0.1:8000/api/v1/posts/` в JSON формате:
 
-+ http://127.0.0.1.8000/api/v1/jwt/verify/ - валидация токена
-    Тип запроса: POST
-    Передаваемые данные: {"token": string}
-
-+ http://127.0.0.1.8000/api/v1/posts/ - доступ к списку публикаций
-    Тип запроса: GET, POST
-    Передаваемые данные (POST): {"text": string, 
-                                "image": string or null,
-                                "group": string or null}
-
-+ http://127.0.0.1.8000/api/v1/posts/{id}/ - доступ к одиночной публикации по id
-    Тип запроса: GET, PUT, PATCH, DELETE 
-    Передаваемые данные (PUT, PATCH): {"text": string, 
-                                      "image": string or null,
-                                      "group": string or null}
-
-+ http://127.0.0.1.8000/api/v1/posts/{post_id}/comments/ - доступ к списку комментариев к посту 
-    Тип запроса: GET, POST
-    Передаваемые данные (PUT, PATCH): {"text": string}
-
-+ http://127.0.0.1.8000/api/v1/posts/{post_id}/comments/{id} - доступ к одиночному комментарию к посту по id
-    Тип запроса: GET, PUT, PATCH, DELETE 
-    Передаваемые данные (PUT, PATCH): {"text": string}
-
-+ http://127.0.0.1.8000/api/v1/groups/ - доступ к списку сообществ
-    Тип запроса: GET
-
-+ http://127.0.0.1.8000/api/v1/posts/{id}/ - доступ к одиночному сообществу по id
-    Тип запроса: GET
-
-+ http://127.0.0.1.8000/api/v1/follow/ - доступ к подпискам пользователя
-    Тип запроса: GET, PUT
-    Передаваемые данные (PUT): {"following": string}
-
-+ http://127.0.0.1.8000/api/v1/follow/?search=string - поиск автора среди подписок пользователя
-    Тип запроса: GET
+```
+{
+    "text": "Ваш текст",
+    "group": 1
+} 
+```
+Пример ответа:
+```
+    {
+        "id": 3,
+        "author": "AlexTheSecond",
+        "text": "Ваш текст",
+        "pub_date": "2022-08-07T21:37:05.442929Z",
+        "image": null,
+        "group": 1
+    }
+```
+### Добавление комментария
+Для добавления новой публикации необходимо отправить POST-запрос
+на адрес `http://127.0.0.1:8000/api/v1/posts/4/comments/` в JSON формате:
+```
+{
+    "text": "текст комментария"
+} 
+```
+Пример ответа:
+```
+{
+    "id": 1,
+    "author": "AlexTheSecond",
+    "post": 1,
+    "text": "текст комментария",
+    "created": "2022-08-07T21:37:05.442929Z"
+} 
+```
+### Добавление подписки
+Для добавления новой подписки необходимо отправить POST-запрос
+на адрес `http://127.0.0.1:8000/api/v1/follow/` в JSON формате с именем автора, 
+на которого хотите подписаться:
+```
+{
+    "following": "name"
+} 
+```
+Пример ответа:
+```
+{
+    "id": 1,
+    "user": "AlexTheSecond",
+    "following": "name",
+} 
+```
+Для GET-запроса доступен поиск автора среди подписок.
+## Технологии
+- python
+- django
+- sqlite
+## Автор
+https://github.com/AlexeyTikhonchuk
