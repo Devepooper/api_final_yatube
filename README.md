@@ -1,88 +1,102 @@
-<img src="icon.png" align="right" />
+# Сервис API для взаимодействия с проектом Yatube
+____
+## Yatube - социальная сеть для блогеров
 
-# Описание проекта Api_Yatube
+Полностью реализует доступ к функционалу социальной сети [Yatube](https://github.com/StrekozJulia/hw05_final.git) через API
+____
 
-Проект представляет собой социальную сеть для публикации личных дневников. 
-Реализован API для всех моделей приложения. По запросу можно просмотреть все записи автора.
-Пользователи могут делать запросы к чужим страницам, комментировать записи различных авторов, подписываться на них.
-API доступен только аутентифицированным пользователям. Реализованы возможность поиска и фильтрации данных.
-Добавлена пагинация ответов. Модели написаны с использованием вьюсетов. 
+## Технологии:
+* Python 3.7
+* Django 2.2.16
+* Pillow 8.3.1
+* Pytest 6.2.4
+* Django 2.2.16
+* DjangoRestFramework 3.12.4
+* PyJWT==2.1.0
+* Djoser==2.1.0
 
-# Используемые технологии
+### Как запустить проект:
 
-Python 3.9, Django 2.2 LTS, Django ORM, Django REST Framework (DRF), REST API, SQLite3, CSRF, Paginator, Simple-JWT, Djoser
-
-## Как запустить проект:
-- Клонировать репозиторий и перейти в него в командной строке:
+1. Клонировать репозиторий, выполнив следующую команду в консоли:
 ```
-git clone https://github.com/Trohimets/api_final_yatube.git
+git clone https://github.com/StrekozJulia/api_final_yatube.git
 ```
+2. Перейти в него в командной строке
 ```
 cd api_final_yatube
 ```
-- Cоздать и активировать виртуальное окружение:
+3. Cоздать виртуальное окружение
 ```
-py -m venv venv
+py -3.7 -m venv venv
 ```
+4. Активировать виртуальное окружение
 ```
-source venv/scripts/activate
+source venv/bin/activate
 ```
-- Установить зависимости из файла requirements.txt:
+5. Обновить пакетный установщик
+```
+py -3.7 -m pip install --upgrade pip
+```
+6. Установить зависимости из файла requirements.txt
 ```
 pip install -r requirements.txt
 ```
-- Выполнить миграции:
+7. Выполнить миграции
 ```
 python manage.py migrate
 ```
-- Запустить проект:
+8. Запустить проект
 ```
 python manage.py runserver
 ```
+____
+## Доступные запросы к API:
 
-## Настроены такие эндпоинты:
++ http://127.0.0.1.8000/api/v1/users/ - создание нового пользователя
+    Тип запроса: POST
+    Передаваемые данные: {"username": string, "password": string}
 
-```
-    api/v1/api-token-auth/ (POST): передаём логин и пароль, получаем токен.
-    api/v1/posts/ (GET, POST): получаем список всех постов или создаём новый пост.
-    api/v1/posts/{post_id}/ (GET, PUT, PATCH, DELETE): получаем, редактируем или удаляем пост по id.
-    api/v1/groups/ (GET): получаем список всех групп.
-    api/v1/groups/{group_id}/ (GET): получаем информацию о группе по id.
-    api/v1/posts/{post_id}/comments/ (GET, POST): получаем список всех комментариев поста с id=post_id или 
-    создаём новый, указав id поста, который хотим прокомментировать.
-    api/v1/posts/{post_id}/comments/{comment_id}/ (GET, PUT, PATCH, DELETE): получаем, редактируем или 
-    удаляем комментарий по id у поста с id=post_id.
-```
-## Примеры запросов:
++ http://127.0.0.1.8000/api/v1/jwt/create/ - создание токена
+    Тип запроса: POST
+    Передаваемые данные: {"username": string, "password": string}
 
-```
-- Пример POST-запроса с токеном Антона Чехова: добавление нового поста.
-POST .../api/v1/posts/
-```
-- Пример ответа:
-```
-{
-    "text": "Вечером собрались в редакции «Русской мысли», чтобы поговорить о народном театре. Проект Шехтеля всем нравится.",
-    "group": 1
-} 
-```
-- Пример GET-запроса: получаем информацию о группе.
-GET .../api/v1/groups/2/
++ http://127.0.0.1.8000/api/v1/jwt/refresh/ - получение токена
+    Тип запроса: POST
+    Передаваемые данные: {"refresh": string}
 
-- Пример ответа:
-```
-{
-    "id": 2,
-    "title": "Математика",
-    "slug": "math",
-    "description": "Посты на тему математики"
-} 
-```
-# Разработчики
++ http://127.0.0.1.8000/api/v1/jwt/verify/ - валидация токена
+    Тип запроса: POST
+    Передаваемые данные: {"token": string}
 
-[Трохимец Константин](https://github.com/Trohimets): весь проект.
++ http://127.0.0.1.8000/api/v1/posts/ - доступ к списку публикаций
+    Тип запроса: GET, POST
+    Передаваемые данные (POST): {"text": string, 
+                                "image": string or null,
+                                "group": string or null}
 
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![DjangoREST](https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray)
-![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
-![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
++ http://127.0.0.1.8000/api/v1/posts/{id}/ - доступ к одиночной публикации по id
+    Тип запроса: GET, PUT, PATCH, DELETE 
+    Передаваемые данные (PUT, PATCH): {"text": string, 
+                                      "image": string or null,
+                                      "group": string or null}
+
++ http://127.0.0.1.8000/api/v1/posts/{post_id}/comments/ - доступ к списку комментариев к посту 
+    Тип запроса: GET, POST
+    Передаваемые данные (PUT, PATCH): {"text": string}
+
++ http://127.0.0.1.8000/api/v1/posts/{post_id}/comments/{id} - доступ к одиночному комментарию к посту по id
+    Тип запроса: GET, PUT, PATCH, DELETE 
+    Передаваемые данные (PUT, PATCH): {"text": string}
+
++ http://127.0.0.1.8000/api/v1/groups/ - доступ к списку сообществ
+    Тип запроса: GET
+
++ http://127.0.0.1.8000/api/v1/posts/{id}/ - доступ к одиночному сообществу по id
+    Тип запроса: GET
+
++ http://127.0.0.1.8000/api/v1/follow/ - доступ к подпискам пользователя
+    Тип запроса: GET, PUT
+    Передаваемые данные (PUT): {"following": string}
+
++ http://127.0.0.1.8000/api/v1/follow/?search=string - поиск автора среди подписок пользователя
+    Тип запроса: GET
