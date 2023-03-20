@@ -11,7 +11,7 @@
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone https://github.com/AlexeyTikhonchuk/api_final_yatube.git
+git clone https://github.com/Devepooper/api_final_yatube
 ```
 
 ```
@@ -141,4 +141,5 @@ Get-запрос на адрес `http://127.0.0.1:8000/api/v1/posts/`.
 - django
 - sqlite
 ## Автор
-https://github.com/AlexeyTikhonchuk
+Степанов Дмитрий
+https://github.com/Devepooper
